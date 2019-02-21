@@ -1,0 +1,164 @@
+ CREATE A Tables
+
+--- To create student table
+create table student(
+stude_id INTEGER primary key,
+stude_name VARCHAR2(50),
+enrolling_date date
+);
+
+-----To create course table
+create table course(
+course_id INTEGER primary key,
+course_fees INTEGER,
+course_name VARCHAR2(50),
+module_id INTEGER,
+module_name VARCHAR2(50)
+);
+
+----To create score table
+create table score(
+stude_id INTEGER,
+cours_id INTEGER,
+module_id INTEGER,
+score INTEGER
+);
+
+
+
+*********************************************************************************************************************************************************************																							
+************************************************************************************************************************************************************************			
+
+
+Processing Single Tables:
+
+1. Get me the count of number of students enrolled between the 2 dates.
+SELECT * FROM STUDENT 
+WHERE ENROLLING_DATE BETWEEN '2016-11-09' AND '2019-02-05';
+
+2. Get me the first 3 records.
+SELECT * FROM STUDENT
+LIMIT 3;
+
+3. Get me the 5 th record.
+SELECT * FROM STUDENT
+WHERE STUDE_ID=5;
+
+4. Get me the records excluding the first 3.																									
+SELECT * FROM STUDENT
+WHERE STUDE_ID >3;
+
+5. Get me the first trainee who joined in the month of February 2016.
+Select * from student 
+where year(ENROLLING_DATE) = 2016 and month(ENROLLING_DATE) = 2;
+
+6. Get me the details of the course which got the least fee structure.																									
+select * from course 
+where course_fees=(select min(course_fees) from course);	
+
+7. Get me the details of the course which got the highest fee structure.	
+select * from course 
+where course_fees=(select max(course_fees) from course);
+
+8. Get me the count of number of modules in the course id 1.																									
+select count(*) from course
+where course_id=1;	
+
+9. Get me the count of number of modules in every course.		
+select course_id,course_name,count(module_id) as module_count from course 
+group by course_id,course_name;
+
+
+10. Get me the count of number of trainees enrolled for course id 1.
+select trainer from course
+where course_id=1
+group by trainer; 
+
+11. Get me the count of number of trainees enrolled for every course.																									
+select course_name,count(trainer) as trainer_count from course 
+group by course_name;
+
+12. Get me the count of number of trainees for every course which got more than 2 students.																									
+select course_id,num_of_trainees from (select course_id,count(stude_id) as num_of_trainees from score group by course_id) scr 
+where num_of_trainees>2  ;
+
+13. Get me the total score of every trainee.																									
+select sum(score) as student_score,stude_id from score group by stude_id;
+
+
+14. Display the scores of all students who attempted module 1.	
+select score,module_id,stude_id,course_id from score where module_id=1 group by module_id,score,stude_id,course_id;	
+
+*********************************************************************************************************************************************************************																							
+************************************************************************************************************************************************************************			
+Processing Multiple Tables:
+
+1. Get me the details of the trainee along with course they enrolled.	
+SELECT s.stude_id, s.stude_name, c.course_name, s.enrolling_date FROM 
+( SELECT stude_id, stude_name, enrolling_date FROM student ) s, 
+( SELECT stude_id, course_id FROM score group by stude_id,course_id )sc, 
+( SELECT course_name, course_id FROM course group by course_id,course_name ) c
+ WHERE s.stude_id = sc.stude_id and c.course_id = sc.course_id order by s.ENROLLING_DATE;																								
+
+2. Display the courses along with their module details.	
+select COURSE_NAME, COURSE_FEES,MODULE_ID, MODULE_NAME from course;
+
+3. Display the details of the modules of a given course.
+select COURSE_NAME, COURSE_FEES,MODULE_ID, MODULE_NAME from course
+where 
+COURSE_ID=1;	
+
+4. Display the Score card of trainees in a module name.
+SELECT score.stude_id,student.stude_name,course.course_name,course.module_name,score.score FROM score inner join student
+on student.stude_id = score.stude_id inner join course
+on course.course_id=score.course_id and 
+course.module_id = score.module_id 
+order by score.stude_id;
+
+
+5. Display the Score card of trainees in a given course.																									
+SELECT score.stude_id,student.stude_name, course.course_name,course.module_name,score.score FROM score inner join student 
+on student.stude_id = score.stude_id inner join course 
+on course.course_id=score.course_id 
+and 
+course.module_id = score.module_id
+where 
+course.course_id=1 
+order by 
+score.stude_id;
+
+6. Display the details of the trainee who topped the given module of a given course.																									
+(select max(sc.score),sc.stude_id,sc.module_id,sc.course_id from score sc
+where sc.stude_id=(select c.course_id from course c
+where c.course_name='JAVA' and c.module_name='DEVELOPER'));
+
+
+7. Display the details of the trainee who topped the course.
+
+select max(sc.score),sc.module_id from score sc
+where sc.stude_id=(select c.course_id from course c
+where c.course_name='JAVA');
+
+
+8. Collect all the data to create a report card for a given trainee and display.																								
+SELECT student.stude_id,student.stude_name, student.enrolling_date, course.course_name,course.module_name,SCORE.SCORE FROM student STUDENT INNER JOIN score score
+ON 
+score.stude_id = student.stude_id INNER JOIN COURSE course 
+ON 
+course.course_id = score.course_id
+AND 
+course.module_id=score.MODULE_ID 
+WHERE 
+student.stude_id = 5
+AND 
+student.stude_id = score.stude_id;
+
+9. Get me the placement support available in days for a trainee as of today.																									
+
+
+
+
+
+
+
+																																																	
