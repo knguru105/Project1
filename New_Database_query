@@ -1,0 +1,180 @@
+
+//TO CREATE STUDENT TABLE
+
+CREATE TABLE INSTITUTE.STUDENT
+(STUDENT_ID INTEGER PRIMARY KEY,
+STUDENT_NAME VARCHAR(50));
+
+*************************************
+//TO CREATE COURSE TABLE
+
+CREATE TABLE INSTITUTE1.COURSE
+(COURSE_ID INTEGER PRIMARY KEY,
+COURSE_NAME VARCHAR(50),
+COURSE_DURATION VARCHAR(50),
+COURSE_FEES DOUBLE); 
+***********************************
+//TO CREATE STUDENT_COURSE TABLE
+
+CREATE TABLE INSTITUTE1.STUDENT_COURSE
+(STUDENT_ID INTEGER, 
+COURSE_ID INTEGER, 
+ENROLLING_DATE DATE);
+**************************************
+//TO CREATE MODULE TABLE
+CREATE TABLE INSTITUTE1.MODULE
+(MODULE_ID INTEGER PRIMARY KEY, 
+MODULE_NAME VARCHAR(50),
+COURSE_ID INTEGER);
+**************************************
+//TO CREATE SCORE_CARD TABLE
+
+CREATE TABLE INSTITUTE1.SCORE_CARD
+(STUDENT_ID INTEGER,
+MODULE_ID INTEGER,
+SCORE DOUBLE,COURSE_ID INTEGER);
+
+*********************************************.
+1ST
+SELECT COUNT(*) FROM STUDENT
+WHERE STUDENT_ID IN(SELECT STUDENT_ID FROM STUDENT_COURSE
+WHERE ENROLLING_DATE BETWEEN '2011-02-15' AND '2017-01-18');
+
+2ND
+SELECT * FROM STUDENT
+LIMIT 3;
+
+3RD
+SELECT * FROM STUDENT
+WHERE STUDENT_ID=105;
+
+4TH
+SELECT * FROM STUDENT
+WHERE STUDENT_ID >103;
+
+5TH
+SELECT STUDENT_ID,STUDENT_NAME FROM STUDENT
+WHERE STUDENT_ID=(Select STUDENT_ID from STUDENT_COURSE
+where year(ENROLLING_DATE) = 2016 and month(ENROLLING_DATE) = 2);
+
+6TH
+select * from course 
+where course_fees=(select min(course_fees) from course);
+
+7TH
+select * from course 
+where course_fees=(select max(course_fees) from course);
+
+8TH
+SELECT COUNT(*) FROM MODULE
+WHERE COURSE_ID=(SELECT COURSE_ID FROM COURSE
+WHERE COURSE_ID=10);
+
+9TH
+SELECT C.COURSE_ID,C.COURSE_NAME,COUNT(M.MODULE_ID) AS NUMBER_OF_MODULE FROM COURSE C, MODULE M
+WHERE C.COURSE_ID=M.COURSE_ID
+GROUP BY C.COURSE_ID,C.COURSE_NAME;
+
+10TH
+select count(student_id) as num_of_trainees from score_card 
+where course_id=10
+group by student_id;
+
+11th
+select (count(s.student_id)) as num_of_trainees,c.course_name from score_card s,course c 
+where s.course_id=c.course_id
+group by course_name;
+
+12th
+select course_id,num_of_trainees from (select course_id,count(student_id) as num_of_trainees from score_card group by course_id) scr 
+where num_of_trainees>2;
+
+13th
+select sum(score) as student_score,student_id from score_card group by student_id;
+
+14th
+select score,module_id,student_id,course_id from score_card where module_id=1 group by module_id,score,student_id,course_id;
+
+*****************************************************************************************************************************************
+
+1ST
+SELECT S.STUDENT_ID,S.STUDENT_NAME,C.COURSE_NAME,SC.ENROLLING_DATE FROM STUDENT S, COURSE C, STUDENT_COURSE SC
+WHERE
+S.STUDENT_ID=SC.STUDENT_ID
+AND
+SC.COURSE_ID=C.COURSE_ID
+GROUP BY 
+S.STUDENT_ID,S.STUDENT_NAME,C.COURSE_NAME,SC.ENROLLING_DATE;
+
+2ND
+select c.course_name,m.module_id,m.module_name from course c, module m 
+where 
+c.course_id=m.course_id;
+
+3RD
+select m.* from module m,course c
+where 
+m.course_id=c.course_id
+and
+c.course_id=10;	
+
+4TH
+select s.student_id,s.student_name,m.module_name,card.score from score_card card,student s,module m
+where 
+card.student_id=s.student_id
+and
+card.course_id=m.course_id;
+
+5TH
+select s.student_id,s.student_name,c.course_name,card.score from score_card card,student s,course c
+where 
+card.student_id=s.student_id
+and
+card.course_id=c.course_id
+and
+c.course_id=30
+order by card.student_id;
+
+6TH
+select max(sc.score) as topped ,s.student_name as trainee_name,s.student_id as trainee_id,m.module_name from score_card sc,student s,course c,student_course stc,module m
+where
+sc.student_id=stc.student_id
+and
+stc.course_id=m.course_id
+and
+m.course_id=c.course_id
+and
+c.course_name='JAVA' and m.module_name='JAVA'
+order by sc.student_id;
+
+7TH
+select max(sc.score) as topped ,s.student_name as trainee_name,s.student_id as trainee_id from score_card sc,student s,course c,student_course stc
+where
+sc.student_id=stc.student_id
+and
+stc.course_id=c.course_id
+and
+c.course_name='JAVA'
+order by sc.student_id;
+
+8TH
+select s.student_id as trainee_id,s.student_name as trainee_name,m.module_name as trainee_module,c.course_name as trainee_course,card.score as trainee_score from student s,module m, course c, score_card card, student_course stc
+where 
+card.student_id=s.student_id
+and
+s.student_id=stc.student_id
+and
+stc.course_id=c.course_id
+order by card.score desc;
+
+9TH
+select s.student_id as student_number,s.student_name,c.course_duration as days,card.score,curdate() as EligibleForTodaysPlacement from student s,course c,score_card card, student_course stc
+where 
+card.student_id=s.student_id
+and 
+s.student_id=stc.student_id
+and
+stc.course_id=c.course_id
+and
+c.course_duration >50 and card.score >60
+order by card.score;
