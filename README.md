@@ -1,1 +1,2 @@
-# Project1
+# sms-api
+School management System API
