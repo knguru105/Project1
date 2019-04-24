@@ -91,7 +91,7 @@ public class QuestionService {
 		  }
 	
 
-		  //adding questions using worksheet id 
+		/*  //adding questions using worksheet id 
 		  public int addQuestionUsingByWorksheet1Id(long tenantId,QuestionDTO questionDTO,long worksheetid)
 	 	  {
 			 	  db = database.getDatabase(tenantId);
@@ -135,6 +135,49 @@ public class QuestionService {
 			      System.out.println("Records saved successfully");
 			      return rowEffected;
 	 	  }
-  	 
+  	 */
+		  
+		  //adding questions using worksheet id 
+		 /* public int addQuestionUsingByWorksheet1Id(long tenantId,QuestionDTO questionDTO,long worksheetid)
+	 	  {
+			 	  db = database.getDatabase(tenantId);
+			 	 
+			 	  Transaction transaction = db.startTransaction();
+			 	  long gradeid = questionDTO.getGradeid();
+			 	  long subjectid = questionDTO.getSubjectid();
+			 	  long questiontypeid = questionDTO.getQuestiontype_id();
+			 	  worksheetid=questionDTO.getW_id();
+			 	  long questionId=questionDTO.getQ_id();
+			 	  
+			 	  //question field
+			 	  long gradeid1 = db.where("id=?",gradeid).results(Grades.class).get(0).getId();
+			 	  long subjectid1 = db.where("id=?",subjectid).results(Subjects.class).get(0).getId();
+			 	  long questiontypeid1 =db.where("qtype_id=?",questiontypeid).results(QuestionType.class).get(0).getQtype_id();
+			 	  
+			 	  //worksheet_question Field
+			 	 long worksheetId1= db.where("w_id=?",worksheetid).results(Worksheet1_question.class).get(0).getW_id();
+			 	 long questionId1=	db.where("q_id=?",questionId).results(Worksheet1_question.class).get(0).getQ_id();
+			        
+			 	  Worksheet1_question work=new Worksheet1_question();
+			 	  work.setId(questionDTO.getId());
+			 	  work.setW_id(worksheetId1);
+			 	  work.setQ_id(questionId1);
+			 	  db.transaction(transaction).insert(work).getRowsAffected();
+			 	  
+			      Question question = new Question();
+			      
+				  question.setQuestionid(questionDTO.getQuestionid());
+			 	  question.setQuestionDescription(questionDTO.getQuestionDescription());
+			 	  question.setQuestiontype_id(questiontypeid1);
+			 	  question.setGradeid(gradeid1);
+			 	  question.setSubjectid(subjectid1);
+			 	  question.setContext(questionDTO.getContext());
+			 	  
+			 	  int rowEffected = db.transaction(transaction).insert(question).getRowsAffected();
+			      transaction.commit();
+			      System.out.println("Records saved successfully");
+			      return rowEffected;
+	 	  }
+  	 */
 	}
 	

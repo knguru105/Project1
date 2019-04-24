@@ -1,20 +1,17 @@
 package com.omniwyse.sms.models;
 
 import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="worksheets1")
 public class Worksheet1 {
 
-	private Long w_id, gradeid, subjectid, status_id;
+	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid;
 	private String  worksheet_name, createdby,worksheet_path;
 	private Date createdon, modifiedon;
 
@@ -74,6 +71,12 @@ public class Worksheet1 {
 	}
 	public void setModifiedon(Date modifiedon) {
 		this.modifiedon = modifiedon;
+	}
+	public Long getDegreeofdifficultyid() {
+		return degreeofdifficultyid;
+	}
+	public void setDegreeofdifficultyid(Long degreeofdifficultyid) {
+		this.degreeofdifficultyid = degreeofdifficultyid;
 	}
 
 	

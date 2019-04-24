@@ -63,7 +63,7 @@ public class QuestionController {
 				  
 			  
 		}
-		//Still working
+		/*//Still working
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		@RequestMapping("/ws/questions/add/{worksheetid}")
 		public ResponseEntity<Response> addQuestionUsingByWorksheet1Id(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionDTO,
@@ -89,7 +89,7 @@ public class QuestionController {
 				  
 			
 		}
-	
+	*/
 		 //fetching questions using question id
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		    @RequestMapping(value="/ws/questions/{questionid}", method = RequestMethod.GET, produces = "application/json")

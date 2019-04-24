@@ -55,18 +55,21 @@ CREATE TABLE worksheets1(
 	gradeid bigint NOT NULL,
 	subjectid bigint NOT NULL,
 	status_id bigint not null,
+	degreeofdifficultyid bigint not null,
 	worksheet_path VARCHAR(100) NOT NULL,
 	createdby VARCHAR(50),
 	createdon timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     modifiedon timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 	FOREIGN KEY(gradeid) REFERENCES grades(id),
 	FOREIGN KEY(subjectid) REFERENCES grade_subjects(id),
-	FOREIGN KEY(status_id) REFERENCES worksheet1_status(id)
+	FOREIGN KEY(status_id) REFERENCES worksheet1_status(id),
+	FOREIGN KEY(degreeofdifficultyid) REFERENCES degreeofdifficulty(id)
 ); 
 
-INSERT INTO worksheets1(w_id, worksheet_name, gradeid, subjectid, status_id, worksheet_path, createdby)
- 				 VALUES(1,"worksheet1",1,6,1,"/desktop","karan"),
- 				 		(2,"worksheet2",2,4,0,"/desktop/images","guru");
+INSERT INTO worksheets1(w_id, worksheet_name, gradeid, subjectid, status_id,degreeofdifficultyid, worksheet_path, createdby)
+ 				 VALUES(1,"worksheet1",1,6,1,1,"/desktop","karan"),
+ 				 		(2,"worksheet2",2,4,0,2,"/desktop/images","guru"),
+ 				 		(3,"worksheet3",2,4,1,3,"/desktop/images","madhavi");
  	
 
 
@@ -169,3 +172,20 @@ INSERT INTO worksheet1_question(id, w_id, q_id)
  				 VALUES(1,1,1),
  				 		(2,2,2);
 
+
+ --********************************Chapter table**********************************************************************************************
+		
+ 				 		
+ create table chapter(
+ id bigint not null auto_increment primary key,
+ wid bigint not null,
+ chaptername varchar(50) not null,
+ FOREIGN KEY(wid) REFERENCES worksheets1(w_id)
+ );
+ 
+ 
+ insert into chapter(id,wid,chaptername)
+ 					values(1,1,"chapter1"),
+ 							(2,2,"chapter2");
+  --********************************End Chapter table**********************************************************************************************
+							

@@ -4,7 +4,15 @@ import java.util.Date;
 
 public class Worksheet1DTO {
 
-	private Long w_id, gradeid, subjectid, status_id;
+	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid;
+	public Long getDegreeofdifficultyid() {
+		return degreeofdifficultyid;
+	}
+
+	public void setDegreeofdifficultyid(Long degreeofdifficultyid) {
+		this.degreeofdifficultyid = degreeofdifficultyid;
+	}
+
 	private String  worksheet_name, createdby,worksheet_path,questionDescription,context;
 	private Date createdon, modifiedon;
 
@@ -21,6 +29,9 @@ public class Worksheet1DTO {
 
 	//fields of subject table
 	private String description;
+	
+	//field of degreeofdifficulty table
+	private String degreeofdifficulty;
 
 	public Long getW_id() {
 		return w_id;
@@ -149,5 +160,13 @@ public class Worksheet1DTO {
 
 	public void setContext(String context) {
 		this.context = context;
+	}
+
+	public String getDegreeofdifficulty() {
+		return degreeofdifficulty;
+	}
+
+	public void setDegreeofdifficulty(String degreeofdifficulty) {
+		this.degreeofdifficulty = degreeofdifficulty;
 	}
 }

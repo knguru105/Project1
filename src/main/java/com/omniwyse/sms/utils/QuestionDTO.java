@@ -22,7 +22,7 @@ public class QuestionDTO {
 	private String subjectname;
 	
 	//field of worksheet_question table
-	private Long w_id, q_id;
+	private Long id,w_id, q_id;
 	
 	//field of Mcq_table
 	private Long mcq_id, mcq_order;
@@ -131,6 +131,14 @@ public class QuestionDTO {
 
 	public void setQ_id(Long q_id) {
 		this.q_id = q_id;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getMcq_id() {
