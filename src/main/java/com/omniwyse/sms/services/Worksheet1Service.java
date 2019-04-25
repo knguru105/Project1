@@ -57,11 +57,11 @@ public class Worksheet1Service {
 		}
 		
 		
-		//get Questions by worksheet ID
+		/*get Questions details by worksheet ID*/
 		 public List<Worksheet1DTO> getQuestionsByWorksheetId(long tenantId, Long worksheetId) {
 		 db = retrive.getDatabase(tenantId);
 		 List<Worksheet1DTO> list = null;
-		 String query = "select worksheet1.worksheet_name,worksheet1.worksheet_path, question.questionDescription, question.context "
+		 String query = "select worksheet1.worksheet_name,worksheet1.worksheet_path, question.questionDescription, question.context,question.questiontype_id "
 		 	+ "from worksheets1 worksheet1 left join worksheet1_question wquestion on worksheet1.w_id=wquestion.w_id left join questions question"
 		 	+ " on question.questionid=wquestion.q_id";
 		 list = db.sql(query + " where worksheet1.w_id = ?", worksheetId).results(Worksheet1DTO.class);
@@ -69,11 +69,7 @@ public class Worksheet1Service {
 		 }
 		 
 		
-		
-		
-		
-		
-		  public int addWorksheet1(long tenantId, Worksheet1DTO worksheetDTO) 
+		 /* public int addWorksheet1(long tenantId, Worksheet1DTO worksheetDTO) 
 		  {
 			  db = database.getDatabase(tenantId);
 		 
@@ -109,6 +105,23 @@ public class Worksheet1Service {
 		  
 		  return db.insert(worksheet).getRowsAffected();
 		  }
-		
-		 	
+*/		
+		 public int addWorksheet1(long tenantId, Worksheet1DTO worksheetDTO) 
+		 {
+			  db = database.getDatabase(tenantId);
+			  Worksheet1 worksheet = new Worksheet1();
+			  
+			  worksheet.setWorksheet_name(worksheetDTO.getWorksheet_name());
+			  worksheet.setGradeid(worksheetDTO.getGradeid());
+			  worksheet.setSubjectid(worksheetDTO.getSubjectid());
+			  worksheet.setStatus_id(worksheetDTO.getStatus_id());
+			  worksheet.setDegreeofdifficultyid(worksheetDTO.getDegreeofdifficultyid());
+			  worksheet.setWorksheet_path(worksheetDTO.getWorksheet_path());
+			  worksheet.setCreatedby(worksheetDTO.getCreatedby());
+			  worksheet.setCreatedon(worksheetDTO.getCreatedon());
+			  worksheet.setModifiedon(worksheetDTO.getModifiedon());
+			  
+			  return db.insert(worksheet).getRowsAffected();
+		  }
+	 	
 }

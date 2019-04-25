@@ -1,14 +1,10 @@
 package com.omniwyse.sms.controller;
 
 import java.util.List;
-
-import javax.management.InstanceAlreadyExistsException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +35,7 @@ public class QuestionController {
 	
 			return list;
 		}
+		/*inserting question details through questions id*/
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		@RequestMapping("/ws/questions/add")
 		public ResponseEntity<Response>addworksheet1(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionDTO)
@@ -63,7 +60,7 @@ public class QuestionController {
 				  
 			  
 		}
-		/*//Still working
+		/*inserting question details through worksheet id*/
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		@RequestMapping("/ws/questions/add/{worksheetid}")
 		public ResponseEntity<Response> addQuestionUsingByWorksheet1Id(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionDTO,
@@ -89,7 +86,7 @@ public class QuestionController {
 				  
 			
 		}
-	*/
+	
 		 //fetching questions using question id
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		    @RequestMapping(value="/ws/questions/{questionid}", method = RequestMethod.GET, produces = "application/json")
