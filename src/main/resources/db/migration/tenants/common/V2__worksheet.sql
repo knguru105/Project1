@@ -187,5 +187,22 @@ INSERT INTO worksheet1_question(id, w_id, q_id)
  insert into chapter(id,wid,chaptername)
  					values(1,1,"chapter1"),
  							(2,2,"chapter2");
-  --********************************End Chapter table**********************************************************************************************
-							
+  --********************************question_image table**********************************************************************************************
+					
+ create table question_image(
+ id bigint not null auto_increment primary key,
+ questionid bigint not null,
+ imageid bigint not null,
+ foreign key(questionid) references questions(questionid),
+ foreign key(imageid) references images(image_id) 
+ );
+ 
+ --********************************multipleChoice_image table**********************************************************************************************
+
+ create table multipleChoice_image(
+ id bigint not null auto_increment primary key,
+ mcqid bigint not null,
+ imageid bigint not null,
+ foreign key(mcqid) references multiple_choice(mcq_id),
+ foreign key(imageid) references images(image_id)
+  );

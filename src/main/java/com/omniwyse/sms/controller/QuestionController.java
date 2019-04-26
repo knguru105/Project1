@@ -15,6 +15,7 @@ import com.omniwyse.sms.models.Question;
 import com.omniwyse.sms.services.QuestionService;
 import com.omniwyse.sms.utils.QuestionDTO;
 import com.omniwyse.sms.utils.Response;
+import com.omniwyse.sms.utils.Worksheet1DTO;
 
 @RestController
 @RequestMapping("/{tenantId}")
@@ -86,6 +87,31 @@ public class QuestionController {
 				  
 			
 		}
+		
+		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		@RequestMapping(value = "/ws/question/update", method = RequestMethod.PUT, produces = "application/json")
+		public ResponseEntity<Response> updateWorksheet(@PathVariable("tenantId") long tenantId,
+				@RequestBody QuestionDTO updateQuestion) {
+
+	 		int rowEffected = 0;
+	 		rowEffected= service.updateQuestion(tenantId,updateQuestion);
+			
+	 		if (rowEffected >= 0) 
+			  {
+				  response.setStatus(200);
+				  response.setMessage("updateQuestion successfully");
+				  response.setDescription("updateQuestion successfully");
+				  return new ResponseEntity<Response>(response, HttpStatus.OK); 
+				  }
+			  else
+			  {
+				  response.setStatus(400);
+				  response.setMessage("question not update");
+				  response.setDescription("question not update");
+				  return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+				  }
+			 
+		 	}
 	
 		 //fetching questions using question id
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")

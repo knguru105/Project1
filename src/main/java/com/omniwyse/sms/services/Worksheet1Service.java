@@ -1,5 +1,6 @@
 package com.omniwyse.sms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,14 @@ import com.dieselpoint.norm.Database;
 import com.omniwyse.sms.db.DatabaseRetrieval;
 import com.omniwyse.sms.models.Degreeofdifficulty;
 import com.omniwyse.sms.models.Grades;
+import com.omniwyse.sms.models.House;
+import com.omniwyse.sms.models.Parents;
+import com.omniwyse.sms.models.Students;
 import com.omniwyse.sms.models.Subjects;
 import com.omniwyse.sms.models.Worksheet1;
 import com.omniwyse.sms.models.Worksheet1_status;
 import com.omniwyse.sms.utils.AssignmentDTO;
+import com.omniwyse.sms.utils.StudentTransferObject;
 import com.omniwyse.sms.utils.Worksheet1DTO;
 @Service
 public class Worksheet1Service {
@@ -124,4 +129,62 @@ public class Worksheet1Service {
 			  return db.insert(worksheet).getRowsAffected();
 		  }
 	 	
+		 public int updateWorksheet(Worksheet1DTO updateWorksheet, long tenantId) {
+			 
+			 db = retrive.getDatabase(tenantId); 
+			 
+			 Worksheet1 work= new Worksheet1();
+			 work.setW_id(updateWorksheet.getW_id());
+			 work.setWorksheet_name(updateWorksheet.getWorksheet_name());
+			 work.setGradeid(updateWorksheet.getGradeid());
+			 work.setSubjectid(updateWorksheet.getSubjectid());
+			 work.setStatus_id(updateWorksheet.getStatus_id());
+			 work.setDegreeofdifficultyid(updateWorksheet.getDegreeofdifficultyid());
+			 work.setWorksheet_path(updateWorksheet.getWorksheet_path());
+			 work.setCreatedby(updateWorksheet.getCreatedby());
+			 work.setCreatedon(updateWorksheet.getCreatedon());
+			 work.setModifiedon(updateWorksheet.getModifiedon());
+			 int rowEffected = db.update(work).getRowsAffected();
+			 
+			 return rowEffected;
+			 
+		 }
+				
+		 
+		/* public String updateStudent(StudentTransferObject updateStudent, long tenantId) {
+				db = retrive.getDatabase(tenantId);
+				List<Grades> grade = db
+						.where("gradename=? and syllabustype=?", updateStudent.getGradename(), updateStudent.getSyllabustype())
+						.results(Grades.class);
+				Parents parent = db.where("id=?", updateStudent.getParentid()).results(Parents.class).get(0);
+				parent.setFathername(updateStudent.getFathername());
+				parent.setMothername(updateStudent.getMothername());
+				parent.setContactnumber(updateStudent.getContactnumber());
+				parent.setAddress(updateStudent.getParentaddress());
+				db.update(parent);
+				Students students = new Students();
+				students.setId(updateStudent.getId());
+				students.setParentid(updateStudent.getParentid());
+				long houseid = db.where("housename=?", updateStudent.getHousename()).results(House.class).get(0).getId();
+				students.setGradeid(grade.get(0).getId());
+				students.setHouseid(houseid);
+				students.setName(updateStudent.getName());
+				students.setMiddlename(updateStudent.getMiddlename());
+				students.setLastname(updateStudent.getLastname());
+				students.setGender(updateStudent.getGender());
+				students.setHeight(updateStudent.getHeight());
+				students.setWeight(updateStudent.getWeight());
+				students.setEmailid(updateStudent.getEmailid());
+				students.setBloodgroup(updateStudent.getBloodgroup());
+				students.setDateofbirth(new Date(updateStudent.getDob()));
+				students.setDateofjoining(new Date(updateStudent.getDoj()));
+				students.setAddress(updateStudent.getAddress());
+				students.setAdmissionnumber(updateStudent.getAdmissionnumber());
+				int rowEffected = db.update(students).getRowsAffected();
+				if (rowEffected > 0) {
+					return assignStudentsToBus(tenantId, updateStudent.getRoutename(), updateStudent.getId());
+				} else
+					return "-10";
+			}
+*/
 }

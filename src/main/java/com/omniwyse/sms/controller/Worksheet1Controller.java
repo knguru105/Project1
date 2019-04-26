@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.omniwyse.sms.models.Worksheet1;
 import com.omniwyse.sms.services.Worksheet1Service;
 import com.omniwyse.sms.utils.Response;
+import com.omniwyse.sms.utils.StudentTransferObject;
 import com.omniwyse.sms.utils.Worksheet1DTO;
 
 @RestController
@@ -89,6 +90,29 @@ public class Worksheet1Controller {
 		 
 	 	}
 	  
+	 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		@RequestMapping(value = "/ws/worksheet/update", method = RequestMethod.PUT, produces = "application/json")
+		public ResponseEntity<Response> updateWorksheet(@PathVariable("tenantId") long tenantId,
+				@RequestBody Worksheet1DTO updateWorksheet) {
 
+	 		int rowEffected = 0;
+	 		rowEffected= service.updateWorksheet(updateWorksheet, tenantId);
+			
+	 		if (rowEffected >= 0) 
+			  {
+				  response.setStatus(200);
+				  response.setMessage("updateWorksheet successfully");
+				  response.setDescription("updateWorksheet successfully");
+				  return new ResponseEntity<Response>(response, HttpStatus.OK); 
+				  }
+			  else
+			  {
+				  response.setStatus(400);
+				  response.setMessage("Worksheet not update");
+				  response.setDescription("Worksheet not update");
+				  return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+				  }
+			 
+		 	}
 	
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.dieselpoint.norm.Database;
 import com.dieselpoint.norm.Transaction;
 import com.omniwyse.sms.db.DatabaseRetrieval;
+import com.omniwyse.sms.models.House;
 import com.omniwyse.sms.models.Question;
 import com.omniwyse.sms.models.Worksheet1_question;
 import com.omniwyse.sms.utils.QuestionDTO;
@@ -104,6 +105,33 @@ public class QuestionService {
 			      
 			      
 	 	  }
+		  
+		  public int updateQuestion(long tenantId,QuestionDTO questionDTO)
+		  { 
+			  db = database.getDatabase(tenantId);
+			 	 
+		 	 // Transaction transaction = db.startTransaction();
+		 	 //long worksheetid = db.where("w_id=?",questionDTO.getW_id()).results(Worksheet1_question.class).get(0).getW_id();//db.where("housename=?", updateStudent.getHousename()).results(House.class).get(0).getId();
+		 	 //long questionid = db.where("q_id=?",questionDTO.getQ_id()).results(Worksheet1_question.class).get(0).getQ_id();
+		      Question question = new Question();
+		      question.setQuestionid(questionDTO.getQuestionid());
+			  question.setQuestionDescription(questionDTO.getQuestionDescription());
+		 	  question.setQuestiontype_id(questionDTO.getQuestiontype_id());
+		 	  question.setGradeid(questionDTO.getGradeid());
+		 	  question.setSubjectid(questionDTO.getSubjectid());
+		 	  question.setContext(questionDTO.getContext());
+		 	  
+		 	  int rowEffected = db.update(question).getRowsAffected();
+		 	  
+		 	  Worksheet1_question wid=new Worksheet1_question();
+		 	  wid.setW_id(questionDTO.getW_id());
+		 	  wid.setQ_id(questionDTO.getQuestionid());
+		 	  
+		 	 db.update(wid).getRowsAffected();;
+		      
+		      System.out.println("Records update successfully");
+		      return rowEffected;
+		  }
 		   
 		 
 
