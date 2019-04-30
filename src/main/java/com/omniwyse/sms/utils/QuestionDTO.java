@@ -27,6 +27,14 @@ public class QuestionDTO {
 	//field of Mcq_table
 	private Long mcq_id, mcq_order;
 	private String mcq_description;
+	
+	
+	//field of images table
+	private Long image_id, Image_for_id;
+	private String image_name, Image_path,Image_class;
+	
+	//field of question_images table
+	private Long imageid;
 
 	public Long getQuestionid() {
 		return questionid;
@@ -163,6 +171,54 @@ public class QuestionDTO {
 
 	public void setMcq_description(String mcq_description) {
 		this.mcq_description = mcq_description;
+	}
+
+	public Long getImage_id() {
+		return image_id;
+	}
+
+	public void setImage_id(Long image_id) {
+		this.image_id = image_id;
+	}
+
+	public Long getImage_for_id() {
+		return Image_for_id;
+	}
+
+	public void setImage_for_id(Long image_for_id) {
+		Image_for_id = image_for_id;
+	}
+
+	public String getImage_name() {
+		return image_name;
+	}
+
+	public void setImage_name(String image_name) {
+		this.image_name = image_name;
+	}
+
+	public String getImage_path() {
+		return Image_path;
+	}
+
+	public void setImage_path(String image_path) {
+		Image_path = image_path;
+	}
+
+	public String getImage_class() {
+		return Image_class;
+	}
+
+	public void setImage_class(String image_class) {
+		Image_class = image_class;
+	}
+
+	public Long getImageid() {
+		return imageid;
+	}
+
+	public void setImageid(Long imageid) {
+		this.imageid = imageid;
 	}
 	
 	

@@ -107,11 +107,11 @@ INSERT INTO question_type(qtype_id, qtype)
 
 create table questions(
 questionid bigint not null auto_increment primary key,
-questionDescription varchar(50) not null,
+questionDescription varchar(500) not null,
 questiontype_id bigint not null,
 gradeid bigint not null,
 subjectid bigint not null,
-context varchar(50) not null,
+context varchar(500) not null,
 FOREIGN KEY(questiontype_id) REFERENCES question_type(qtype_id),
 FOREIGN KEY(gradeid) REFERENCES grades(id),
 FOREIGN KEY(subjectid) REFERENCES grade_subjects(id)

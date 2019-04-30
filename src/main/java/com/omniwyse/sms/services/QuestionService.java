@@ -1,14 +1,28 @@
 package com.omniwyse.sms.services;
 
+import java.io.File;
 import java.util.List;import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dieselpoint.norm.Database;
 import com.dieselpoint.norm.Transaction;
+import com.omniwyse.sms.db.DBFactory;
 import com.omniwyse.sms.db.DatabaseRetrieval;
+import com.omniwyse.sms.ischool.S3BucketService;
+import com.omniwyse.sms.models.Grades;
 import com.omniwyse.sms.models.House;
+import com.omniwyse.sms.models.Images;
 import com.omniwyse.sms.models.Question;
+import com.omniwyse.sms.models.Question_Images;
+import com.omniwyse.sms.models.Tenants;
 import com.omniwyse.sms.models.Worksheet1_question;
+import com.omniwyse.sms.models.Worksheets;
 import com.omniwyse.sms.utils.QuestionDTO;
+import com.omniwyse.sms.utils.WorkSheetsDTO;
 
 
 @Service
@@ -21,6 +35,12 @@ public class QuestionService {
 
 	@Autowired
 	private DatabaseRetrieval retrive;
+	
+	@Autowired
+	private S3BucketService s3Service;
+
+	@Autowired
+	private DBFactory dbfactory;
 	
 			public List<Question> getQuestionList(long tenantId) {
 		
@@ -127,13 +147,68 @@ public class QuestionService {
 		 	  wid.setW_id(questionDTO.getW_id());
 		 	  wid.setQ_id(questionDTO.getQuestionid());
 		 	  
-		 	 db.update(wid).getRowsAffected();;
+		 	 db.update(wid).getRowsAffected();
 		      
 		      System.out.println("Records update successfully");
 		      return rowEffected;
 		  }
 		   
-		 
+		  @SuppressWarnings("deprecation")
+			public int uploadNewImages(long tenantId, QuestionDTO imagesDTO) {
+
+				try {
+					Database schoolDb = dbfactory.getSchoolDb();
+					String bucketName = schoolDb.where("id = ?", tenantId).results(Tenants.class).get(0).getDbname();
+					bucketName += ".school";
+					AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
+					db = retrive.getDatabase(tenantId);
+
+					if (!s3Client.doesBucketExist(bucketName)) {
+						s3Service.creatinBucketInS3(s3Client, bucketName);
+					}
+					// String[] paths = worksheets.getFilePath();
+					/// for (String filePath : paths) {
+					File file = new File(imagesDTO.getImage_path());
+					/*long gradeNumber = db.where("id = ?", imagesDTO.getGradeid()).results(Grades.class).get(0)
+							.getGradenumber();
+					String subjectname = imagesDTO.getSubjectname();*/
+					String defaultPath = "C:\\Users\\GK\\Desktop\\images";
+					String filePath = bucketName;
+					s3Client.putObject(new PutObjectRequest(filePath, imagesDTO.getImage_name(), file)
+							.withCannedAcl(CannedAccessControlList.PublicRead));
+					attachImagesByQuestion(tenantId, imagesDTO, defaultPath + filePath + "/" + imagesDTO.getImage_name());
+					// }
+					return 0;
+				} catch (Exception e) 
+				{
+					return -1;
+				}
+			}
+		 public int attachImagesByQuestion(long tenantId,QuestionDTO imagesDTO,String imagepath)
+		 {
+			 db = database.getDatabase(tenantId);
+			 int rowEffected=0;
+			 Long questionid=imagesDTO.getQuestionid();
+			 Images img = new Images();
+			 img.setImage_name(imagesDTO.getImage_name());
+			 img.setImage_path(imagepath);
+			 if (!db.where("Image_path = ?", imagepath).results(Images.class).isEmpty()) {
+					return 0;
+				}
+			 img.setImage_for_id(imagesDTO.getImage_for_id());
+			 img.setImage_class(imagesDTO.getImage_class());
+			 
+			 rowEffected = db.insert(img).getRowsAffected();
+			 
+			 Question_Images question_images = new Question_Images();
+			 question_images.setImageid(img.getImage_id());
+			 question_images.setQuestionid(questionid);
+			 
+			 db.insert(question_images).getRowsAffected();;
+			 
+			 return rowEffected;
+			 
+		 }
 
   	 
 	}

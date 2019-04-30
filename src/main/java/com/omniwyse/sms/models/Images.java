@@ -12,9 +12,9 @@ public class Images {
 	
 	private Long image_id ,Image_for_id ;
 	private String image_name, Image_path,Image_class;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	
 	public Long getImage_id() {
 		return image_id;
 	}

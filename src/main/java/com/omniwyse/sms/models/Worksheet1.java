@@ -17,7 +17,6 @@ public class Worksheet1 {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	
 	public Long getW_id() {
 		return w_id;
 	}

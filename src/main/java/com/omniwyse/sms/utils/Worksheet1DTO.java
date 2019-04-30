@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Worksheet1DTO {
 
-	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid;
+	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid,questiontype_id;
 	public Long getDegreeofdifficultyid() {
 		return degreeofdifficultyid;
 	}
@@ -168,5 +168,13 @@ public class Worksheet1DTO {
 
 	public void setDegreeofdifficulty(String degreeofdifficulty) {
 		this.degreeofdifficulty = degreeofdifficulty;
+	}
+
+	public Long getQuestiontype_id() {
+		return questiontype_id;
+	}
+
+	public void setQuestiontype_id(Long questiontype_id) {
+		this.questiontype_id = questiontype_id;
 	}
 }
