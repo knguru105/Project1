@@ -10,8 +10,8 @@ import javax.persistence.Table;
 @Table(name="images")
 public class Images {
 	
-	private Long image_id ,Image_for_id ;
-	private String image_name, Image_path,Image_class;
+	private Long image_id ,image_for_id ;
+	private String image_name, image_path,image_class;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -22,10 +22,10 @@ public class Images {
 		this.image_id = image_id;
 	}
 	public Long getImage_for_id() {
-		return Image_for_id;
+		return image_for_id;
 	}
 	public void setImage_for_id(Long image_for_id) {
-		Image_for_id = image_for_id;
+		this.image_for_id = image_for_id;
 	}
 	public String getImage_name() {
 		return image_name;
@@ -34,17 +34,18 @@ public class Images {
 		this.image_name = image_name;
 	}
 	public String getImage_path() {
-		return Image_path;
+		return image_path;
 	}
 	public void setImage_path(String image_path) {
-		Image_path = image_path;
+		this.image_path = image_path;
 	}
 	public String getImage_class() {
-		return Image_class;
+		return image_class;
 	}
 	public void setImage_class(String image_class) {
-		Image_class = image_class;
+		this.image_class = image_class;
 	}
+	
 	
 	
 	

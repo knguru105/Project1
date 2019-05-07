@@ -27,14 +27,35 @@ public class QuestionDTO {
 	//field of Mcq_table
 	private Long mcq_id, mcq_order;
 	private String mcq_description;
-	
-	
+		
+		
 	//field of images table
-	private Long image_id, Image_for_id;
-	private String image_name, Image_path,Image_class;
-	
+	private Long image_id, image_for_id;
+	private String image_name, image_path,image_class;
+		
 	//field of question_images table
 	private Long imageid;
+	
+	//field of MultipleChoice_Image table
+	private Long mcqid, imageorder;
+	
+	
+	
+	public Long getMcqid() {
+		return mcqid;
+	}
+
+	public void setMcqid(Long mcqid) {
+		this.mcqid = mcqid;
+	}
+
+	public Long getImageorder() {
+		return imageorder;
+	}
+
+	public void setImageorder(Long imageorder) {
+		this.imageorder = imageorder;
+	}
 
 	public Long getQuestionid() {
 		return questionid;
@@ -120,9 +141,16 @@ public class QuestionDTO {
 		return subjectname;
 	}
 
-	
 	public void setSubjectname(String subjectname) {
 		this.subjectname = subjectname;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getW_id() {
@@ -141,19 +169,11 @@ public class QuestionDTO {
 		this.q_id = q_id;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Long getMcq_id() {
 		return mcq_id;
 	}
 
-	public void setMcq_id(long mcq_id) {
+	public void setMcq_id(Long mcq_id) {
 		this.mcq_id = mcq_id;
 	}
 
@@ -161,7 +181,7 @@ public class QuestionDTO {
 		return mcq_order;
 	}
 
-	public void setMcq_order(long mcq_order) {
+	public void setMcq_order(Long mcq_order) {
 		this.mcq_order = mcq_order;
 	}
 
@@ -182,11 +202,11 @@ public class QuestionDTO {
 	}
 
 	public Long getImage_for_id() {
-		return Image_for_id;
+		return image_for_id;
 	}
 
 	public void setImage_for_id(Long image_for_id) {
-		Image_for_id = image_for_id;
+		this.image_for_id = image_for_id;
 	}
 
 	public String getImage_name() {
@@ -198,19 +218,19 @@ public class QuestionDTO {
 	}
 
 	public String getImage_path() {
-		return Image_path;
+		return image_path;
 	}
 
 	public void setImage_path(String image_path) {
-		Image_path = image_path;
+		this.image_path = image_path;
 	}
 
 	public String getImage_class() {
-		return Image_class;
+		return image_class;
 	}
 
 	public void setImage_class(String image_class) {
-		Image_class = image_class;
+		this.image_class = image_class;
 	}
 
 	public Long getImageid() {
@@ -220,12 +240,7 @@ public class QuestionDTO {
 	public void setImageid(Long imageid) {
 		this.imageid = imageid;
 	}
-	
-	
-	
 
 	
-	
-		
 	
 }

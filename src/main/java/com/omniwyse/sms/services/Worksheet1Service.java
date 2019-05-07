@@ -9,6 +9,7 @@ import com.dieselpoint.norm.Database;
 import com.omniwyse.sms.db.DatabaseRetrieval;
 import com.omniwyse.sms.models.Worksheet1;
 import com.omniwyse.sms.utils.Worksheet1DTO;
+
 @Service
 public class Worksheet1Service {
 
@@ -56,7 +57,7 @@ public class Worksheet1Service {
 		 public List<Worksheet1DTO> getQuestionsByWorksheetId(long tenantId, Long worksheetId) {
 		 db = retrive.getDatabase(tenantId);
 		 List<Worksheet1DTO> list = null;
-		 String query = "select worksheet1.worksheet_name,worksheet1.worksheet_path, question.questionDescription, question.context,question.questiontype_id "
+		 String query = "select worksheet1.w_id,worksheet1.worksheet_name,worksheet1.worksheet_path, question.questionid,question.questionDescription, question.context,question.questiontype_id "
 		 	+ "from worksheets1 worksheet1 left join worksheet1_question wquestion on worksheet1.w_id=wquestion.w_id left join questions question"
 		 	+ " on question.questionid=wquestion.q_id";
 		 list = db.sql(query + " where worksheet1.w_id = ?", worksheetId).results(Worksheet1DTO.class);

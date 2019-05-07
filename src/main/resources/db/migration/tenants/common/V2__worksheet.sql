@@ -147,14 +147,14 @@ INSERT INTO multiple_choice(mcq_id, mcq_order, mcq_description, questionid)
 create table images(
 image_id bigint not null auto_increment primary key,
 image_name varchar(50) not null,
-Image_path varchar(50) not null,
-Image_for_id bigint,
-Image_class varchar(50) not null
+image_path varchar(50) not null,
+image_for_id bigint,
+image_class varchar(50) not null
 );
 
 
 
-INSERT INTO images(image_id, image_name, Image_path, Image_for_id, Image_class)
+INSERT INTO images(image_id, image_name, image_path, image_for_id, image_class)
  				 VALUES(1,"image1","images/question/1.jpg",1,"mcq"),
  				 		(2,"image2","images/question/2.jpg",2,"descriptive");
 

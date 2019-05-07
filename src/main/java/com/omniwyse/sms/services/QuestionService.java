@@ -1,28 +1,28 @@
 package com.omniwyse.sms.services;
 
-import java.io.File;
-import java.util.List;import org.springframework.beans.factory.annotation.Autowired;
+import java.awt.image.BufferedImage;import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dieselpoint.norm.Database;
 import com.dieselpoint.norm.Transaction;
-import com.omniwyse.sms.db.DBFactory;
 import com.omniwyse.sms.db.DatabaseRetrieval;
-import com.omniwyse.sms.ischool.S3BucketService;
-import com.omniwyse.sms.models.Grades;
-import com.omniwyse.sms.models.House;
 import com.omniwyse.sms.models.Images;
+import com.omniwyse.sms.models.MultipleChoice_Image;
+import com.omniwyse.sms.models.Multiple_choice;
 import com.omniwyse.sms.models.Question;
+import com.omniwyse.sms.models.QuestionType;
 import com.omniwyse.sms.models.Question_Images;
-import com.omniwyse.sms.models.Tenants;
 import com.omniwyse.sms.models.Worksheet1_question;
-import com.omniwyse.sms.models.Worksheets;
 import com.omniwyse.sms.utils.QuestionDTO;
-import com.omniwyse.sms.utils.WorkSheetsDTO;
 
 
 @Service
@@ -36,11 +36,7 @@ public class QuestionService {
 	@Autowired
 	private DatabaseRetrieval retrive;
 	
-	@Autowired
-	private S3BucketService s3Service;
-
-	@Autowired
-	private DBFactory dbfactory;
+	
 	
 			public List<Question> getQuestionList(long tenantId) {
 		
@@ -74,9 +70,9 @@ public class QuestionService {
 		  public List<QuestionDTO> getMcqByQuestionId(long tenantId, Long questionId) {
 			  db = retrive.getDatabase(tenantId);
 			  List<QuestionDTO> list = null;
-			  String query = "select question.questionDescription,question.context,mcq.mcq_order,mcq.mcq_description "
+			  String query = "select question.questionid,question.questionDescription,question.context,mcq.mcq_order,mcq.mcq_description "
 			  		+ "from questions question  left join multiple_choice mcq "
-			  		+ "on question.questionid=mcq.questionid ";
+			  		+ "on mcq.questionid = question.questionid";
 			  list = db.sql(query + " where question.questionid = ?", questionId).results(QuestionDTO.class);
 			  return list;
 			  }
@@ -152,63 +148,234 @@ public class QuestionService {
 		      System.out.println("Records update successfully");
 		      return rowEffected;
 		  }
-		   
+		  
+		  public List<QuestionType> getQuestionType(long tenantId) {
+				
+				db = retrive.getDatabase(tenantId);
+		
+				return db.sql("select * from question_type").results(QuestionType.class);
+			}
+		  public int addQuestionType(long tenantId, QuestionDTO questionType)
+		  {
+			  db = database.getDatabase(tenantId);
+			  
+			  QuestionType type = new QuestionType();
+			  type.setQtype(questionType.getQtype());
+			  int rowEffected = db.insert(type).getRowsAffected();
+			  System.out.println("QuestionType inserted successfully");
+			  return rowEffected;
+			  
+		  }
+		  
+		  
+		  public int updateQuestionType(long tenantId,QuestionDTO questionType)
+		  {
+			  db = database.getDatabase(tenantId);
+			  
+			  QuestionType type = new QuestionType();
+			  type.setQtype_id(questionType.getQtype_id());
+			  type.setQtype(questionType.getQtype());
+			  int rowEffected = db.update(type).getRowsAffected();
+			  System.out.println("QuestionType updated successfully");
+			  return rowEffected;
+		  }
+		  
+		  public List<Multiple_choice> getMultipleChoice(long tenantId) {
+				
+				db = retrive.getDatabase(tenantId);
+		
+				return db.sql("select * from multiple_choice").results(Multiple_choice.class);
+			}
+		  public int addMultipleChoice(long tenantId, QuestionDTO multipleChoice) 
+		  {
+			  
+		  db = database.getDatabase(tenantId);
+		 
+		  Multiple_choice choice = new Multiple_choice();
+		
+		  choice.setMcq_order(multipleChoice.getMcq_order());
+		  choice.setMcq_description(multipleChoice.getMcq_description());
+		  choice.setQuestionid(multipleChoice.getQuestionid());
+		  int rowEffected= db.insert(choice).getRowsAffected();
+		  System.out.println("Records added successfully");
+		  return rowEffected;
+		  }
+		  
+		  
+		  public int updateMultipleChoice(long tenantId, QuestionDTO multipleChoice) 
+		  {
+			  
+		  db = database.getDatabase(tenantId);
+		 
+		  Multiple_choice choice = new Multiple_choice();
+		  choice.setMcq_id(multipleChoice.getMcq_id());
+		  choice.setMcq_order(multipleChoice.getMcq_order());
+		  choice.setMcq_description(multipleChoice.getMcq_description());
+		  choice.setQuestionid(multipleChoice.getQuestionid());
+		  int rowEffected= db.update(choice).getRowsAffected();
+		  System.out.println("Records Updated successfully");
+		  return rowEffected;
+		  }
+		  
+		  
+		  
 		  @SuppressWarnings("deprecation")
 			public int uploadNewImages(long tenantId, QuestionDTO imagesDTO) {
-
 				try {
-					Database schoolDb = dbfactory.getSchoolDb();
-					String bucketName = schoolDb.where("id = ?", tenantId).results(Tenants.class).get(0).getDbname();
-					bucketName += ".school";
-					AmazonS3Client s3Client = new AmazonS3Client(new ProfileCredentialsProvider());
-					db = retrive.getDatabase(tenantId);
+					 Path path = Paths.get("C:\\Users\\GK\\Desktop\\Images\\New");
+				        Files.createDirectories(path);
+				        int width = 963;    
+				        int height = 640; 
+				        BufferedImage image = null;
+				        File defaultpath = null;
+				        File filetpath = null;
+				        String name;
+				        String imagepath = null;
 
-					if (!s3Client.doesBucketExist(bucketName)) {
-						s3Service.creatinBucketInS3(s3Client, bucketName);
-					}
-					// String[] paths = worksheets.getFilePath();
-					/// for (String filePath : paths) {
-					File file = new File(imagesDTO.getImage_path());
-					/*long gradeNumber = db.where("id = ?", imagesDTO.getGradeid()).results(Grades.class).get(0)
-							.getGradenumber();
-					String subjectname = imagesDTO.getSubjectname();*/
-					String defaultPath = "C:\\Users\\GK\\Desktop\\images";
-					String filePath = bucketName;
-					s3Client.putObject(new PutObjectRequest(filePath, imagesDTO.getImage_name(), file)
-							.withCannedAcl(CannedAccessControlList.PublicRead));
-					attachImagesByQuestion(tenantId, imagesDTO, defaultPath + filePath + "/" + imagesDTO.getImage_name());
-					// }
-					return 0;
-				} catch (Exception e) 
-				{
-					return -1;
-				}
+					    try{
+					          defaultpath = new File("C:\\Users\\GK\\Desktop\\Images"); 
+					          File[] fList = defaultpath.listFiles();
+	
+					          for (File file : fList)
+					          {
+					              if (file.isFile())
+					              {
+					            	 name = file.getName();
+					             
+							          image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+							          image = ImageIO.read(file);
+							          System.out.println("Reading complete.");
+							        
+							          filetpath = new File("C:\\Users\\GK\\Desktop\\Images\\New\\"+name); 
+							          imagepath = filetpath.getPath();
+							          ImageIO.write(image,"jpeg", filetpath);
+							          System.out.println("Writing complete.");
+							          attachImagesByQuestion(tenantId, imagesDTO,imagepath);
+					              }
+					           }
+					          
+					        }
+				        catch(IOException e){
+				          System.out.println("Error: "+e);
+				        }
+				        
+					
+
+				return 0;
+			} catch (Exception e) {
+				return -1;
 			}
+		}
+			
 		 public int attachImagesByQuestion(long tenantId,QuestionDTO imagesDTO,String imagepath)
 		 {
 			 db = database.getDatabase(tenantId);
+			 Transaction transaction= db.startTransaction();
 			 int rowEffected=0;
 			 Long questionid=imagesDTO.getQuestionid();
 			 Images img = new Images();
 			 img.setImage_name(imagesDTO.getImage_name());
 			 img.setImage_path(imagepath);
-			 if (!db.where("Image_path = ?", imagepath).results(Images.class).isEmpty()) {
-					return 0;
+			 if (db.where("image_path = ?", imagepath).results(Images.class).isEmpty()) {
+				 img.setImage_for_id(imagesDTO.getImage_for_id());
+				 img.setImage_class(imagesDTO.getImage_class());
+				 
+				 rowEffected = db.transaction(transaction).insert(img).getRowsAffected();
+				 
+				 Question_Images question_images = new Question_Images();
+				 question_images.setImageid(img.getImage_id());
+				 question_images.setQuestionid(questionid);
+				 
+				 db.transaction(transaction).insert(question_images).getRowsAffected();
+				 transaction.commit();
+				 return rowEffected;
 				}
-			 img.setImage_for_id(imagesDTO.getImage_for_id());
-			 img.setImage_class(imagesDTO.getImage_class());
 			 
-			 rowEffected = db.insert(img).getRowsAffected();
-			 
-			 Question_Images question_images = new Question_Images();
-			 question_images.setImageid(img.getImage_id());
-			 question_images.setQuestionid(questionid);
-			 
-			 db.insert(question_images).getRowsAffected();;
-			 
-			 return rowEffected;
+			 return 0;
 			 
 		 }
+		 
+		 @SuppressWarnings("deprecation")
+			public int uploadNewImagesByMultipleChoice(long tenantId, QuestionDTO imagesDTO) {
+				try {
+					 Path path = Paths.get("C:\\Users\\GK\\Desktop\\Images\\MultipleChoice");
+				        Files.createDirectories(path);
+				        int width = 963;    
+				        int height = 640; 
+				        BufferedImage image = null;
+				        File defaultpath = null;
+				        File filetpath = null;
+				        String name;
+				        String imagepath = null;
+
+					    try{
+					          defaultpath = new File("C:\\Users\\GK\\Desktop\\Images"); 
+					          File[] fList = defaultpath.listFiles();
+	
+					          for (File file : fList)
+					          {
+					              if (file.isFile())
+					              {
+					            	 name = file.getName();
+					             
+							          image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+							          image = ImageIO.read(file);
+							          System.out.println("Reading complete.");
+							        
+							          filetpath = new File("C:\\Users\\GK\\Desktop\\Images\\MultipleChoice\\"+name); 
+							          imagepath = filetpath.getPath();
+							          ImageIO.write(image,"jpeg", filetpath);
+							          System.out.println("Writing complete.");
+							          attachImagesByMultipleChoice(tenantId, imagesDTO,imagepath);
+					              }
+					           }
+					          
+					        }
+				        catch(IOException e){
+				          System.out.println("Error: "+e);
+				        }
+				        
+					
+
+				return 0;
+			} catch (Exception e) {
+				return -1;
+			}
+		}
+			
+
+		 public int attachImagesByMultipleChoice(long tenantId,QuestionDTO imagesDTO,String imagepath)
+		 {
+			 db = database.getDatabase(tenantId);
+			 Transaction transaction= db.startTransaction();
+			 int rowEffected=0;
+			 
+			 Images img = new Images();
+			 Long mcqid= imagesDTO.getMcq_id();
+			 img.setImage_name(imagesDTO.getImage_name());
+			 img.setImage_path(imagepath);
+			 if (db.where("image_path = ?", imagepath).results(Images.class).isEmpty()) {
+				 img.setImage_for_id(imagesDTO.getImage_for_id());
+				 img.setImage_class(imagesDTO.getImage_class());
+				 
+				 rowEffected = db.transaction(transaction).insert(img).getRowsAffected();
+				 MultipleChoice_Image mul_images= new MultipleChoice_Image();
+				 
+				 mul_images.setMcqid(mcqid);
+				 mul_images.setImageid(img.getImage_id());
+				 mul_images.setImageorder(imagesDTO.getImageorder());
+				 
+				 db.transaction(transaction).insert(mul_images).getRowsAffected();
+				 transaction.commit();
+				 return rowEffected;
+				}
+			 
+			 return 0;
+			 
+		 }
+		 
+		 
+		 
 
   	 
 	}

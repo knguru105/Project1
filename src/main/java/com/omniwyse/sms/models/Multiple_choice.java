@@ -12,7 +12,7 @@ public class Multiple_choice {
 
 	
 	private Long mcq_id, mcq_order, questionid;
-	private Long mcq_description;
+	private String mcq_description;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getMcq_id() {
@@ -33,10 +33,10 @@ public class Multiple_choice {
 	public void setQuestionid(Long questionid) {
 		this.questionid = questionid;
 	}
-	public Long getMcq_description() {
+	public String getMcq_description() {
 		return mcq_description;
 	}
-	public void setMcq_description(Long mcq_description) {
+	public void setMcq_description(String mcq_description) {
 		this.mcq_description = mcq_description;
 	}
 	

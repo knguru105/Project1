@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Worksheet1DTO {
 
-	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid,questiontype_id;
+	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid,questiontype_id,questionid;
 	public Long getDegreeofdifficultyid() {
 		return degreeofdifficultyid;
 	}
@@ -14,7 +14,7 @@ public class Worksheet1DTO {
 	}
 
 	private String  worksheet_name, createdby,worksheet_path,questionDescription,context;
-	private Date createdon, modifiedon;
+	//private Date createdon, modifiedon;
 
 	
 
@@ -89,7 +89,7 @@ public class Worksheet1DTO {
 		this.worksheet_path = worksheet_path;
 	}
 
-	public Date getCreatedon() {
+	/*public Date getCreatedon() {
 		return createdon;
 	}
 
@@ -103,7 +103,7 @@ public class Worksheet1DTO {
 
 	public void setModifiedon(Date modifiedon) {
 		this.modifiedon = modifiedon;
-	}
+	}*/
 
 	public Long getGradenumber() {
 		return gradenumber;
@@ -176,5 +176,13 @@ public class Worksheet1DTO {
 
 	public void setQuestiontype_id(Long questiontype_id) {
 		this.questiontype_id = questiontype_id;
+	}
+
+	public Long getQuestionid() {
+		return questionid;
+	}
+
+	public void setQuestionid(Long questionid) {
+		this.questionid = questionid;
 	}
 }

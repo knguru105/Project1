@@ -1,6 +1,7 @@
 package com.omniwyse.sms.models;
 
 import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ public class Worksheet1 {
 
 	private Long w_id, gradeid, subjectid, status_id,degreeofdifficultyid;
 	private String  worksheet_name, createdby,worksheet_path;
+	
 	private Date createdon, modifiedon;
 
 	@Id
@@ -59,6 +61,7 @@ public class Worksheet1 {
 	public void setWorksheet_path(String worksheet_path) {
 		this.worksheet_path = worksheet_path;
 	}
+
 	public Date getCreatedon() {
 		return createdon;
 	}
