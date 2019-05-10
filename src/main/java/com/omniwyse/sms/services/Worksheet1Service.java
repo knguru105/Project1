@@ -39,11 +39,11 @@ public class Worksheet1Service {
 			}
 		
 		
-		
+		//fetching records of grades_subject_level by worksheet id
 		public List<Worksheet1DTO> getWorksheetById(long tenantId, Long worksheetId) {
 			db = retrive.getDatabase(tenantId);
 			List<Worksheet1DTO> list = null;
-			String query = "select worksheet1.w_id,worksheet1.worksheet_name,worksheet1.worksheet_path,grades.gradename,grades.syllabustype,"
+			String query = "select worksheet1.w_id,worksheet1.gradeid,worksheet1.subjectid,worksheet1.status_id,worksheet1.degreeofdifficultyid,worksheet1.worksheet_name,worksheet1.worksheet_path,grades.gradename,grades.syllabustype,"
 					+ "subjects.subjectname,status.description,degreeofdifficulty.degreeofdifficulty "
 					+ "from worksheets1 worksheet1 left join grades grades on worksheet1.gradeid=grades.id left join subjects subjects on worksheet1.subjectid=subjects.subjectid left join "
 					+ "worksheet1_status status on worksheet1.status_id=status.id left join "
@@ -52,12 +52,26 @@ public class Worksheet1Service {
 			return list;
 		}
 		
+		// list of grades_subject details by worksheet
+		public List<Worksheet1DTO> getListOfGradesSubjectsByWorksheet(long tenantId) {
+			db = retrive.getDatabase(tenantId);
+			List<Worksheet1DTO> list = null;
+			String query = "select worksheet1.w_id,worksheet1.gradeid,worksheet1.subjectid,worksheet1.status_id,worksheet1.degreeofdifficultyid,worksheet1.worksheet_name,worksheet1.worksheet_path,grades.gradename,grades.syllabustype,"
+					+ "subjects.subjectname,status.description,degreeofdifficulty.degreeofdifficulty "
+					+ "from worksheets1 worksheet1 left join grades grades on worksheet1.gradeid=grades.id left join subjects subjects on worksheet1.subjectid=subjects.subjectid left join "
+					+ "worksheet1_status status on worksheet1.status_id=status.id left join "
+					+ "degreeofdifficulty degreeofdifficulty on worksheet1.degreeofdifficultyid=degreeofdifficulty.id "
+					+ "order by worksheet1.w_id";
+			list = db.sql(query).results(Worksheet1DTO.class);
+			return list;
+		}
 		
 		/*get Questions details by worksheet ID*/
 		 public List<Worksheet1DTO> getQuestionsByWorksheetId(long tenantId, Long worksheetId) {
 		 db = retrive.getDatabase(tenantId);
 		 List<Worksheet1DTO> list = null;
-		 String query = "select worksheet1.w_id,worksheet1.worksheet_name,worksheet1.worksheet_path, question.questionid,question.questionDescription, question.context,question.questiontype_id "
+		
+		 String query = "select worksheet1.w_id,worksheet1.worksheet_name,question.questionid,question.questionDescription, question.context,question.status_id,question.gradeid,question.correctAnswer,question.degreeofdifficultyid,question.questiontype_id "
 		 	+ "from worksheets1 worksheet1 left join worksheet1_question wquestion on worksheet1.w_id=wquestion.w_id left join questions question"
 		 	+ " on question.questionid=wquestion.q_id";
 		 list = db.sql(query + " where worksheet1.w_id = ?", worksheetId).results(Worksheet1DTO.class);

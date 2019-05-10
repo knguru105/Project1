@@ -22,7 +22,7 @@ import com.omniwyse.sms.utils.WorkSheetsDTO;
 import com.omniwyse.sms.utils.Worksheet1DTO;
 
 @RestController
-@RequestMapping("/{tenantId}")
+@RequestMapping("/{tenantId}/ws/questions")
 public class QuestionController {
 
 		@Autowired
@@ -33,14 +33,14 @@ public class QuestionController {
 
 	
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		@RequestMapping("/ws/questions/list")
+		@RequestMapping("/list")
 		public List<Question> listingquestions(@PathVariable("tenantId") long tenantId) {
 	
 			List<Question> list = service.getQuestionList(tenantId);
 	
 			return list;
 		}
-		/*inserting question details through questions id*/
+		/*inserting question details through questions id
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		@RequestMapping("/ws/questions/add")
 		public ResponseEntity<Response>addQuestion(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionDTO)
@@ -64,10 +64,10 @@ public class QuestionController {
 				  }
 				  
 			  
-		}
+		}*/
 		/*inserting question details through worksheet id*/
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		@RequestMapping("/ws/questions/add/{worksheetid}")
+		@RequestMapping("/add/{worksheetid}")
 		public ResponseEntity<Response> addQuestionUsingByWorksheet1Id(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionDTO,
 				@PathVariable("worksheetid") long worksheetid)
 		{
@@ -93,7 +93,7 @@ public class QuestionController {
 		}
 		
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		@RequestMapping(value = "/ws/question/update", method = RequestMethod.PUT, produces = "application/json")
+		@RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
 		public ResponseEntity<Response> updateWorksheet(@PathVariable("tenantId") long tenantId,
 				@RequestBody QuestionDTO updateQuestion) {
 
@@ -117,9 +117,40 @@ public class QuestionController {
 			 
 		 	}
 	
+			// list of grades_subject details by questions
+			@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		    @RequestMapping(value="/listof_grades_subjects_status", method = RequestMethod.GET, produces = "application/json")
+		    public List<QuestionDTO> getListOfGradesSubjectsByQuestions(@PathVariable("tenantId") long tenantId){
+		 		
+		        return service.getListOfGradesSubjectsByQuestions(tenantId);
+		    }
+		 	
+			/* List of worksheets1 table by id through grades,subjects,status table*/
+		 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		    @RequestMapping(value="/listof_grades_subjects_status/{questionid}", method = RequestMethod.GET, produces = "application/json")
+		    public List<QuestionDTO> getListOfGradesSubjectsByQuestionsId(@PathVariable("tenantId") long tenantId,@PathVariable("questionid") long questionId ){
+		 		
+		        return service.getListOfGradesSubjectsByQuestionsId(tenantId, questionId);
+		    }
+		 	
+		 	/* List of QuestionAnswer */
+		 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		    @RequestMapping(value="/answer", method = RequestMethod.GET, produces = "application/json")
+		    public List<QuestionDTO> getQuestionAnswers(@PathVariable("tenantId") long tenantId){
+		 		
+		        return service.QuestionAnswers(tenantId);
+		    }
+		 	
+		 	/* List of QuestionAnswer by question id */
+		 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+		    @RequestMapping(value="/answer/{questionid}", method = RequestMethod.GET, produces = "application/json")
+		    public List<QuestionDTO> getQuestionAnswersByQuestionId(@PathVariable("tenantId") long tenantId,@PathVariable("questionid") long questionId){
+		 		
+		        return service.getQuestionAnswersByQuestionId(tenantId,questionId);
+		    }
 		 //fetching questions using question id
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		    @RequestMapping(value="/ws/questions/{questionid}", method = RequestMethod.GET, produces = "application/json")
+		    @RequestMapping(value="/{questionid}", method = RequestMethod.GET, produces = "application/json")
 		    public List<Question> getListOfQuestionsUsingId(@PathVariable("tenantId") long tenantId, 
 		    		@PathVariable("questionid") long questionId ) {
 		        return service.getListOfQuestionsUsingId(tenantId, questionId);
@@ -128,21 +159,21 @@ public class QuestionController {
 		  
 		  //accessing questiontype using question id
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		   @RequestMapping(value="/ws/questions/{questionid}/questiontype", method = RequestMethod.GET, produces = "application/json")
+		   @RequestMapping(value="/{questionid}/questiontype", method = RequestMethod.GET, produces = "application/json")
 		   public List<QuestionDTO> getQuestionTypeByQuestionId(@PathVariable("tenantId") long tenantId, 
 		    @PathVariable("questionid") long questionid ) {
 		       return service.getQuestionTypeByQuestionId(tenantId, questionid);
 		   }
 		  //accessing mcqs by question id 
 		  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		   @RequestMapping(value="/ws/question/{questionid}/mcq_option", method = RequestMethod.GET, produces = "application/json")
+		   @RequestMapping(value="/{questionid}/mcq_option", method = RequestMethod.GET, produces = "application/json")
 		   public List<QuestionDTO> getMcqByQuestionId(@PathVariable("tenantId") long tenantId, 
 		    @PathVariable("questionid") long questionid ) {
 		       return service.getMcqByQuestionId(tenantId, questionid);
 		   }
 		  
 		 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping("/ws/questions/multiplechoice/list")
+			@RequestMapping("/multiplechoice/list")
 			public List<Multiple_choice> getMultipleChoice(@PathVariable("tenantId") long tenantId) {
 		
 				List<Multiple_choice> list = service.getMultipleChoice(tenantId);
@@ -150,7 +181,7 @@ public class QuestionController {
 				return list;
 			}
 		  	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping("/ws/questions/multiplechoice/add")
+			@RequestMapping("/multiplechoice/add")
 			public ResponseEntity<Response>addMultipleChoice(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO multipleChoice)
 			{
 				  int rowEffected = 0;
@@ -175,7 +206,7 @@ public class QuestionController {
 			}
 		  	
 		  	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping(value = "/ws/question/multiplechoice/update", method = RequestMethod.PUT, produces = "application/json")
+			@RequestMapping(value = "/multiplechoice/update", method = RequestMethod.PUT, produces = "application/json")
 			public ResponseEntity<Response> updateMultipleChoice(@PathVariable("tenantId") long tenantId,
 					@RequestBody QuestionDTO multipleChoice) {
 
@@ -200,7 +231,7 @@ public class QuestionController {
 			 	}
 		  
 		  	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping("/ws/questions/questiontype/list")
+			@RequestMapping("/questiontype/list")
 			public List<QuestionType> getQuestionType(@PathVariable("tenantId") long tenantId) {
 		
 				List<QuestionType> list = service.getQuestionType(tenantId);
@@ -208,7 +239,7 @@ public class QuestionController {
 				return list;
 			}
 		  	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping("/ws/questions/questiontype/add")
+			@RequestMapping("/questiontype/add")
 			public ResponseEntity<Response>addQuestionType(@PathVariable("tenantId") long tenantId, @RequestBody QuestionDTO questionType)
 			{
 				  int rowEffected = 0;
@@ -227,13 +258,13 @@ public class QuestionController {
 					  response.setMessage("questionType not added");
 					  response.setDescription("questionType not added");
 					  return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
-					  }
+				   }
 					  
 				  
 			}
 		  	
 		  	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-			@RequestMapping(value = "/ws/question/questiontype/update", method = RequestMethod.PUT, produces = "application/json")
+			@RequestMapping(value = "/questiontype/update", method = RequestMethod.PUT, produces = "application/json")
 			public ResponseEntity<Response> updateQuestionType(@PathVariable("tenantId") long tenantId,
 					@RequestBody QuestionDTO questionType) {
 

@@ -61,7 +61,7 @@ CREATE TABLE worksheets1(
 	createdon timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     modifiedon timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 	FOREIGN KEY(gradeid) REFERENCES grades(id),
-	FOREIGN KEY(subjectid) REFERENCES grade_subjects(id),
+	FOREIGN KEY(subjectid) REFERENCES subjects(id),
 	FOREIGN KEY(status_id) REFERENCES worksheet1_status(id),
 	FOREIGN KEY(degreeofdifficultyid) REFERENCES degreeofdifficulty(id)
 ); 
@@ -83,9 +83,7 @@ FOREIGN KEY(w_id) REFERENCES worksheets1(w_id)
 );
 
 
-INSERT INTO worksheets1_tags(tagid, tags, w_id)
- 				 VALUES(1,"tag1",1),
- 				 		(2,"tag2",2);
+
  	
 
 --******************** QUESTION_TYPE TABLES **********************************************************************************************************
@@ -111,17 +109,20 @@ questionDescription varchar(500) not null,
 questiontype_id bigint not null,
 gradeid bigint not null,
 subjectid bigint not null,
+status_id bigint not null,
+degreeofdifficultyid bigint not null,
 context varchar(500) not null,
+
 FOREIGN KEY(questiontype_id) REFERENCES question_type(qtype_id),
 FOREIGN KEY(gradeid) REFERENCES grades(id),
-FOREIGN KEY(subjectid) REFERENCES grade_subjects(id)
+FOREIGN KEY(subjectid) REFERENCES subjects(id),
+FOREIGN KEY(status_id) REFERENCES worksheet1_status(id),
+FOREIGN KEY(degreeofdifficultyid) REFERENCES degreeofdifficulty(id)
 
 );
 
 
-INSERT INTO questions(questionid, questionDescription, questiontype_id, gradeid, subjectid, context)
- 				 VALUES(1,"what is the capital of india?",1,1,6,"social"),
- 				 		(2,"write 13's table",2,2,4,"tables");
+
  	
 
 --******************** MULTIPLE CHOICE TABLES **********************************************************************************************************
@@ -135,11 +136,7 @@ FOREIGN KEY(questionid) REFERENCES questions(questionid)
 );
 
 
-INSERT INTO multiple_choice(mcq_id, mcq_order, mcq_description, questionid)
- 				 VALUES(1,1,"hyderabad",1),
- 				 		(2,2,"Mumbai",1),
- 				 		(3,4,"Pune",1),
- 				 		(4,3,"Delhi",1);
+
  	
 
 --******************** IMAGES TABLES **********************************************************************************************************
@@ -154,9 +151,7 @@ image_class varchar(50) not null
 
 
 
-INSERT INTO images(image_id, image_name, image_path, image_for_id, image_class)
- 				 VALUES(1,"image1","images/question/1.jpg",1,"mcq"),
- 				 		(2,"image2","images/question/2.jpg",2,"descriptive");
+
 
 --********************************worksheet1_question table**********************************************************************************************
 
@@ -168,9 +163,6 @@ FOREIGN KEY(w_id) REFERENCES worksheets1(w_id),
 FOREIGN KEY(q_id) REFERENCES questions(questionid)
 );
 
-INSERT INTO worksheet1_question(id, w_id, q_id)
- 				 VALUES(1,1,1),
- 				 		(2,2,2);
 
 
  --********************************Chapter table**********************************************************************************************
@@ -184,9 +176,7 @@ INSERT INTO worksheet1_question(id, w_id, q_id)
  );
  
  
- insert into chapter(id,wid,chaptername)
- 					values(1,1,"chapter1"),
- 							(2,2,"chapter2");
+ 
   --********************************question_image table**********************************************************************************************
 					
  create table question_image(

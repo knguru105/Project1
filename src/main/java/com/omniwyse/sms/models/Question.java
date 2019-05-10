@@ -9,11 +9,29 @@ public class Question  {
 	
 	
 	
-	private Long  questionid,gradeid,subjectid;
+	private Long  questionid,gradeid,subjectid,status_id,degreeofdifficultyid,correctAnswer;
 	private String questionDescription;
 	private Long questiontype_id;
 	private String context;
 	
+	public Long getStatus_id() {
+		return status_id;
+	}
+	public void setStatus_id(Long status_id) {
+		this.status_id = status_id;
+	}
+	public Long getDegreeofdifficultyid() {
+		return degreeofdifficultyid;
+	}
+	public void setDegreeofdifficultyid(Long degreeofdifficultyid) {
+		this.degreeofdifficultyid = degreeofdifficultyid;
+	}
+	public Long getCorrectAnswer() {
+		return correctAnswer;
+	}
+	public void setCorrectAnswer(Long correctAnswer) {
+		this.correctAnswer = correctAnswer;
+	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long getQuestionid() {

@@ -23,11 +23,13 @@ public class Worksheet1DTO {
 	private String gradename;
 	private String syllabustype;
 	
+	//field of question table
+	private Long correctAnswer;
 
 	//fields of subject table
 	private String subjectname;
 
-	//fields of subject table
+	//fields of status table
 	private String description;
 	
 	//field of degreeofdifficulty table
@@ -184,5 +186,13 @@ public class Worksheet1DTO {
 
 	public void setQuestionid(Long questionid) {
 		this.questionid = questionid;
+	}
+
+	public Long getCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public void setCorrectAnswer(Long correctAnswer) {
+		this.correctAnswer = correctAnswer;
 	}
 }

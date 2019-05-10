@@ -1,6 +1,7 @@
 package com.omniwyse.sms.services;
 
-import java.awt.image.BufferedImage;import java.io.File;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +24,7 @@ import com.omniwyse.sms.models.QuestionType;
 import com.omniwyse.sms.models.Question_Images;
 import com.omniwyse.sms.models.Worksheet1_question;
 import com.omniwyse.sms.utils.QuestionDTO;
+import com.omniwyse.sms.utils.Worksheet1DTO;
 
 
 @Service
@@ -37,7 +39,7 @@ public class QuestionService {
 	private DatabaseRetrieval retrive;
 	
 	
-	
+			
 			public List<Question> getQuestionList(long tenantId) {
 		
 				db = retrive.getDatabase(tenantId);
@@ -58,14 +60,63 @@ public class QuestionService {
 		 	public List<QuestionDTO> getQuestionTypeByQuestionId(long tenantId, Long questionId) {
 			  db = retrive.getDatabase(tenantId);
 			  List<QuestionDTO> list = null;
-			  String query = "select question.questionDescription,question.context,questiontype.qtype "
+			  String query = "select question.questionid,question.questionDescription,question.context,questiontype.qtype "
 			  		+ "from questions question  left join question_type questiontype "
 			  		+ "on question.questiontype_id=questiontype.qtype_id ";
 			  list = db.sql(query + " where question.questionid = ?", questionId).results(QuestionDTO.class);
 			  return list;
 			  }
 		  
-		  
+		 // list of grades_subject details by questions
+			public List<QuestionDTO> getListOfGradesSubjectsByQuestions(long tenantId) {
+				db = retrive.getDatabase(tenantId);
+				List<QuestionDTO> list = null;
+				String query = "select questions.questionid,questions.gradeid,questions.subjectid,questions.status_id,"
+						+ "questions.degreeofdifficultyid,questions.questionDescription,questions.context,grades.gradename,grades.syllabustype,"
+						+ "subjects.subjectname,status.description,degreeofdifficulty.degreeofdifficulty "
+						+ "from questions questions left join grades grades on questions.gradeid=grades.id left join subjects subjects on questions.subjectid=subjects.subjectid left join "
+						+ "worksheet1_status status on questions.status_id=status.id left join "
+						+ "degreeofdifficulty degreeofdifficulty on questions.degreeofdifficultyid=degreeofdifficulty.id "
+						+ "order by questions.questionid";
+				list = db.sql(query).results(QuestionDTO.class);
+				return list;
+			}
+			 // list of grades_subject details by questions id
+			public List<QuestionDTO> getListOfGradesSubjectsByQuestionsId(long tenantId,Long questionId) {
+				db = retrive.getDatabase(tenantId);
+				List<QuestionDTO> list = null;
+				String query = "select question.questionid,question.gradeid,question.subjectid,question.status_id,\n" + 
+						"question.degreeofdifficultyid,question.questionDescription,question.context,grades.gradename,grades.syllabustype,\n" + 
+						"subjects.subjectname,status.description,degreeofdifficulty.degreeofdifficulty\n" + 
+						"from questions question left join grades grades on question.gradeid=grades.id left join subjects subjects \n" + 
+						"on question.subjectid=subjects.subjectid left join worksheet1_status status\n" + 
+						"on question.status_id=status.id left join degreeofdifficulty degreeofdifficulty\n" + 
+						"on question.degreeofdifficultyid=degreeofdifficulty.id";
+				list = db.sql(query + " where question.questionid = ?", questionId).results(QuestionDTO.class);
+				return list;
+			}			
+			
+		//QuestionAnswer
+			public List<QuestionDTO> QuestionAnswers(long tenantId) {
+				db = retrive.getDatabase(tenantId);
+				List<QuestionDTO> list = null;
+				String query = "select question.questionid,question.questionDescription,question.correctAnswer,mcq.mcq_order,mcq.mcq_description,questiontype.qtype"
+						+ " from questions question left join multiple_choice mcq on question.questionid=mcq.questionid left join question_type questiontype"
+						+ " on question.questiontype_id=questiontype.qtype_id group by question.questionid order by question.questionid";
+				list = db.sql(query).results(QuestionDTO.class);
+				return list;
+			}	
+			
+			//QuestionAnswer by question id
+			public List<QuestionDTO> getQuestionAnswersByQuestionId(long tenantId,long questionId) {
+				db = retrive.getDatabase(tenantId);
+				List<QuestionDTO> list = null;
+				String query = "select question.questionid,question.questionDescription,question.correctAnswer,mcq.mcq_order,mcq.mcq_description,questiontype.qtype"
+						+ " from questions question left join multiple_choice mcq on question.questionid=mcq.questionid left join question_type questiontype"
+						+ " on question.questiontype_id=questiontype.qtype_id ";
+				list = db.sql(query + "where question.questionid = ? group by question.questionid",questionId).results(QuestionDTO.class);
+				return list;
+			}	
 		//get MCQ by question ID
 		  public List<QuestionDTO> getMcqByQuestionId(long tenantId, Long questionId) {
 			  db = retrive.getDatabase(tenantId);
@@ -78,7 +129,7 @@ public class QuestionService {
 			  }
 		  
 		
-		  public int addQuestion(long tenantId, QuestionDTO questionDTO) 
+		/*  public int addQuestion(long tenantId, QuestionDTO questionDTO) 
 		  {
 			  
 		  db = database.getDatabase(tenantId);
@@ -92,7 +143,7 @@ public class QuestionService {
 		  question.setContext(questionDTO.getContext());
 		  
 		  return db.insert(question).getRowsAffected();
-		  }
+		  }*/
 	
 		  public int addQuestionUsingByWorksheet1Id(long tenantId,QuestionDTO questionDTO,long worksheetid)
 	 	  {
@@ -106,8 +157,12 @@ public class QuestionService {
 			 	  question.setQuestiontype_id(questionDTO.getQuestiontype_id());
 			 	  question.setGradeid(questionDTO.getGradeid());
 			 	  question.setSubjectid(questionDTO.getSubjectid());
+			 	  question.setStatus_id(questionDTO.getStatus_id());
+			 	  question.setDegreeofdifficultyid(questionDTO.getDegreeofdifficultyid());
 			 	  question.setContext(questionDTO.getContext());
 			 	  
+			 	  question.setCorrectAnswer(questionDTO.getCorrectAnswer());
+			 	  			 	  
 			 	  int rowEffected = db.transaction(transaction).insert(question).getRowsAffected();
 			 	  
 			 	  Worksheet1_question wid=new Worksheet1_question();
@@ -135,7 +190,10 @@ public class QuestionService {
 		 	  question.setQuestiontype_id(questionDTO.getQuestiontype_id());
 		 	  question.setGradeid(questionDTO.getGradeid());
 		 	  question.setSubjectid(questionDTO.getSubjectid());
+		 	  question.setStatus_id(questionDTO.getStatus_id());
+		 	  question.setDegreeofdifficultyid(questionDTO.getDegreeofdifficultyid());
 		 	  question.setContext(questionDTO.getContext());
+		 	  question.setCorrectAnswer(questionDTO.getCorrectAnswer());
 		 	  
 		 	  int rowEffected = db.update(question).getRowsAffected();
 		 	  

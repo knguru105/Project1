@@ -19,7 +19,7 @@ import com.omniwyse.sms.utils.StudentTransferObject;
 import com.omniwyse.sms.utils.Worksheet1DTO;
 
 @RestController
-@RequestMapping("/{tenantId}")
+@RequestMapping("/{tenantId}/ws/worksheet")
 public class Worksheet1Controller {
 
 		@Autowired
@@ -32,7 +32,7 @@ public class Worksheet1Controller {
 	 	/* List of worksheets1*/
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
 		@GetMapping
-		@RequestMapping("/ws/worksheet/list")
+		@RequestMapping("/list")
 		public List<Worksheet1> listingWorksheets(@PathVariable("tenantId") long tenantId){
 	
 			List<Worksheet1> list = service.getWorksheet1List(tenantId);
@@ -40,9 +40,9 @@ public class Worksheet1Controller {
 			return list;
 		}
 	
-		/* List of worksheets1 table by id*/
+		/* List of worksheets1 table by Worksheet id*/
 		@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		@RequestMapping(value="/ws/worksheet/{worksheetsId}", method = RequestMethod.GET, produces = "application/json")
+		@RequestMapping(value="/{worksheetsId}", method = RequestMethod.GET, produces = "application/json")
 		public List<Worksheet1> getListOfWorksheet1UsingId(@PathVariable("tenantId") long tenantId,@PathVariable("worksheetsId") long worksheetsId ){
 	      
 			return service.getListOfWorksheet1UsingId(tenantId, worksheetsId);
@@ -50,15 +50,23 @@ public class Worksheet1Controller {
 	
 		/* List of worksheets1 table by id through grades,subjects,status table*/
 	 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-	    @RequestMapping(value="/ws/worksheet/listof_grades_subjects_status/{worksheetsId}", method = RequestMethod.GET, produces = "application/json")
+	    @RequestMapping(value="/{worksheetsId}/listofgradesandsubjectsandstatus", method = RequestMethod.GET, produces = "application/json")
 	    public List<Worksheet1DTO> getWorksheets1ById(@PathVariable("tenantId") long tenantId,@PathVariable("worksheetsId") long worksheetsId ){
 	 		
 	        return service.getWorksheetById(tenantId, worksheetsId);
 	    }
 	 	
+	 	/* List of worksheets1 table through grades,subjects,status table*/
+	 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
+	    @RequestMapping(value="/listofgradesandsubjectsandstatus", method = RequestMethod.GET, produces = "application/json")
+	    public List<Worksheet1DTO> getListOfGradesSubjectsByWorksheet(@PathVariable("tenantId") long tenantId){
+	 		
+	        return service.getListOfGradesSubjectsByWorksheet(tenantId);
+	    }
+	 	
 	 	 //accessing question using worksheet id
 	 	 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-	 	 @RequestMapping(value="/ws/worksheet/{worksheetsId}/questions", method = RequestMethod.GET, produces = "application/json")
+	 	 @RequestMapping(value="/{worksheetsId}/questions", method = RequestMethod.GET, produces = "application/json")
 	 	 public List<Worksheet1DTO> getQuestionsByWorksheetId(@PathVariable("tenantId") long tenantId,@PathVariable("worksheetsId") long worksheetsId ){
 	 		 
 	 	      return service.getQuestionsByWorksheetId(tenantId, worksheetsId);
@@ -67,7 +75,7 @@ public class Worksheet1Controller {
 
 	 	/* add worksheets1 Details*/
 	 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-	 	@RequestMapping("/ws/worksheet/add")
+	 	@RequestMapping("/add")
 	 	public ResponseEntity<Response>addworksheet1(@PathVariable("tenantId") long tenantId, @RequestBody Worksheet1DTO worksheetDTO)
 	 	{
 		  int rowEffected = 0;
@@ -91,7 +99,7 @@ public class Worksheet1Controller {
 	 	}
 	  
 	 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_TEACHER')")
-		@RequestMapping(value = "/ws/worksheet/update", method = RequestMethod.PUT, produces = "application/json")
+		@RequestMapping(value = "/update", method = RequestMethod.PUT, produces = "application/json")
 		public ResponseEntity<Response> updateWorksheet(@PathVariable("tenantId") long tenantId,
 				@RequestBody Worksheet1DTO updateWorksheet) {
 

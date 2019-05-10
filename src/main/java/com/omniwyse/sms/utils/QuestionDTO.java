@@ -5,7 +5,7 @@ package com.omniwyse.sms.utils;
 public class QuestionDTO {
 
 	
-	private Long  questionid,gradeid,subjectid;
+	private Long  questionid,gradeid,subjectid,status_id,degreeofdifficultyid,correctAnswer;
 	private String questionDescription;
 	private Long questiontype_id;
 	private String context;
@@ -16,28 +16,60 @@ public class QuestionDTO {
 	
 	//fields of grade table
 	private Long gradenumber;
-	private String gradename;
+	private String gradename,syllabustype;
 	
+	public String getSyllabustype() {
+		return syllabustype;
+	}
+
+	public void setSyllabustype(String syllabustype) {
+		this.syllabustype = syllabustype;
+	}
+
 	//fields of subject table
 	private String subjectname;
 	
+	//fields of status table
+	private String description;
+		
+	//field of degree of difficulty table
+	private String degreeofdifficulty;
+	
 	//field of worksheet_question table
 	private Long id,w_id, q_id;
-	
+		
 	//field of Mcq_table
 	private Long mcq_id, mcq_order;
 	private String mcq_description;
-		
-		
+			
+			
 	//field of images table
 	private Long image_id, image_for_id;
 	private String image_name, image_path,image_class;
-		
+			
 	//field of question_images table
 	private Long imageid;
-	
+		
 	//field of MultipleChoice_Image table
 	private Long mcqid, imageorder;
+		
+	
+	public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getDegreeofdifficulty() {
+			return degreeofdifficulty;
+		}
+
+		public void setDegreeofdifficulty(String degreeofdifficulty) {
+			this.degreeofdifficulty = degreeofdifficulty;
+		}
+
 	
 	
 	
@@ -241,6 +273,29 @@ public class QuestionDTO {
 		this.imageid = imageid;
 	}
 
+	
+	public Long getStatus_id() {
+		return status_id;
+	}
+
+	public void setStatus_id(Long status_id) {
+		this.status_id = status_id;
+	}
+
+	public Long getDegreeofdifficultyid() {
+		return degreeofdifficultyid;
+	}
+
+	public void setDegreeofdifficultyid(Long degreeofdifficultyid) {
+		this.degreeofdifficultyid = degreeofdifficultyid;
+	}
+	public Long getCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public void setCorrectAnswer(Long correctAnswer) {
+		this.correctAnswer = correctAnswer;
+	}
 	
 	
 }
